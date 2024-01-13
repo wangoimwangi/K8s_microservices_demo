@@ -20,6 +20,10 @@ spec:
         env:
         - name: PORT
           value: "8080"
+        - name: DISABLE_TRACING
+          values: "1"
+        - name: DISABLE_PROFILER
+          values: "1"
         livenessProbe:
           periodSeconds: 5
           exec:
@@ -67,6 +71,10 @@ spec:
           value: "8080"
         - name: PRODUCT_CATALOG_SERVICE_ADDR
           value: "productcatalogservice:3550"
+        - name: DISABLE_TRACING
+          values: "1"
+        - name: DISABLE_PROFILER
+          values: "1"
         livenessProbe:
           periodSeconds: 5
           exec:
@@ -114,12 +122,13 @@ spec:
           value: "3550"
         livenessProbe:
           periodSeconds: 5
-          exec:
-            commands: ["/bin/grpc_health_probe", "-addr=:3550"]
+          httpGet:
+            path: /health
+            port: 3550
+
         readinessProbe:
           periodSeconds: 5
-          exec:
-            commands: ["/bin/grpc_health_probe", "-addr=:8080"]
+          
 
 ---
 apiVersion: v1
@@ -389,13 +398,15 @@ spec:
       - name: redis-data
         emptyDir: {}
       livenessProbe:
+          initialDelaySeconds: 5
           periodSeconds: 5
-          exec:
-            commands: ["/bin/grpc_health_probe", "-addr=:6379"] 
+          tcpSocket:
+            port: 6379
       readinessProbe:
+          initialDelaySeconds: 5
           periodSeconds: 5
-          exec:
-            commands: ["/bin/grpc_health_probe", "-addr=:6379"]
+          tcpSocket:
+            port: 6379
 ---
 apiVersion: v1
 kind: Service
