@@ -4,6 +4,7 @@ kind: Deployment
 metadata:
   name: emailservice
 spec:
+  replicas: 3
   selector:
     matchLabels:
       app: emailservice
@@ -32,6 +33,14 @@ spec:
           periodSeconds: 5
           exec:
             commands: ["/bin/grpc_health_probe", "-addr=:8080"]
+        resources:
+          requests:
+            cpu: 100m
+            memory: 64Mi 
+          limits:
+            cpu: 200m
+            memory: 128Mi
+
 ---
 apiVersion: v1
 kind: Service
@@ -53,6 +62,7 @@ kind: Deployment
 metadata:
   name: recommendationservice
 spec:
+  replicas: 3
   selector:
     matchLabels:
       app: recommendationservice
@@ -83,6 +93,13 @@ spec:
           periodSeconds: 5
           exec:
             commands: ["/bin/grpc_health_probe", "-addr=:8080"]
+        resources:
+          requests:
+            cpu: 100m
+            memory: 64Mi 
+          limits:
+            cpu: 200m
+            memory: 128Mi
 ---
 apiVersion: v1
 kind: Service
@@ -104,6 +121,7 @@ kind: Deployment
 metadata:
   name: productcatalogservice
 spec:
+  replicas: 3
   selector:
     matchLabels:
       app: productcatalogservice
@@ -125,9 +143,17 @@ spec:
           httpGet:
             path: /health
             port: 3550
-
         readinessProbe:
           periodSeconds: 5
+          exec:
+            commands: ["/bin/grpc_health_probe", "-addr=:50051"]
+        resources:
+          requests:
+            cpu: 100m
+            memory: 64Mi 
+          limits:
+            cpu: 200m
+            memory: 128Mi
           
 
 ---
@@ -150,6 +176,7 @@ kind: Deployment
 metadata:
   name: paymentservice
 spec:
+  replicas: 3
   selector:
     matchLabels:
       app: paymentservice
@@ -174,6 +201,13 @@ spec:
           periodSeconds: 5
           exec:
             commands: ["/bin/grpc_health_probe", "-addr=:50051"]
+        resources:
+          requests:
+            cpu: 100m
+            memory: 64Mi 
+          limits:
+            cpu: 200m
+            memory: 128Mi
 ---
 apiVersion: v1
 kind: Service
@@ -194,6 +228,7 @@ kind: Deployment
 metadata:
   name: currencyservice
 spec:
+  replicas: 3
   selector:
     matchLabels:
       app: currencyservice
@@ -219,6 +254,13 @@ spec:
           periodSeconds: 5
           exec:
             commands: ["/bin/grpc_health_probe", "-addr=:7000"]
+        resources:
+          requests:
+            cpu: 100m
+            memory: 64Mi 
+          limits:
+            cpu: 200m
+            memory: 128Mi
 ---
 apiVersion: v1
 kind: Service
@@ -240,6 +282,7 @@ kind: Deployment
 metadata:
   name: shippingservice
 spec:
+  replicas: 3
   selector:
     matchLabels:
       app: shippingservice
@@ -264,6 +307,13 @@ spec:
           periodSeconds: 5
           exec:
             commands: ["/bin/grpc_health_probe", "-addr=:50051"]
+        resources:
+          requests:
+            cpu: 100m
+            memory: 64Mi 
+          limits:
+            cpu: 200m
+            memory: 128Mi
 
 ---
 apiVersion: v1
@@ -271,7 +321,6 @@ kind: Service
 metadata:
   name: shippingservice
 spec:
-  
   selector:
     app: shippingservice
   ports:
@@ -286,6 +335,7 @@ kind: Deployment
 metadata:
   name: adservice
 spec:
+  replicas: 3
   selector:
     matchLabels:
       app: adservice
@@ -310,6 +360,13 @@ spec:
           periodSeconds: 5
           exec:
             commands: ["/bin/grpc_health_probe", "-addr=:9555"]
+        resources:
+          requests:
+            cpu: 200m
+            memory: 180Mi 
+          limits:
+            cpu: 300m
+            memory: 300Mi
 ---
 apiVersion: v1
 kind: Service
@@ -331,6 +388,7 @@ kind: Deployment
 metadata:
   name: cartservice
 spec:
+  replicas: 3
   selector:
     matchLabels:
       app: cartservice
@@ -357,6 +415,13 @@ spec:
           periodSeconds: 5
           exec:
             commands: ["/bin/grpc_health_probe", "-addr=:7070"]
+        resources:
+          requests:
+            cpu: 100m
+            memory: 64Mi 
+          limits:
+            cpu: 200m
+            memory: 128Mi
 ---
 apiVersion: v1
 kind: Service
@@ -378,6 +443,7 @@ kind: Deployment
 metadata:
   name: redis-cart
 spec:
+  replicas: 3
   selector:
     matchLabels:
       app: redis-cart
@@ -407,6 +473,14 @@ spec:
           periodSeconds: 5
           tcpSocket:
             port: 6379
+      resources:
+          requests:
+            cpu: 70m
+            memory: 200Mi 
+          limits:
+            cpu: 125m    
+            memory: 300Mi
+      
 ---
 apiVersion: v1
 kind: Service
@@ -428,6 +502,7 @@ kind: Deployment
 metadata:
   name: checkoutservice
 spec:
+  replicas: 3 
   selector:
     matchLabels:
       app: checkoutservice
@@ -462,6 +537,13 @@ spec:
           periodSeconds: 5
           exec:
             commands: ["/bin/grpc_health_probe", "-addr=:5050"]
+        resources:
+          requests:
+            cpu: 100m
+            memory: 64Mi 
+          limits:
+            cpu: 200m
+            memory: 128Mi   
 
 ---
 apiVersion: v1
@@ -523,6 +605,13 @@ spec:
           periodSeconds: 5
           exec:
             commands: ["/bin/grpc_health_probe", "-addr=:8080"]
+        resources:
+          requests:
+            cpu: 100m
+            memory: 64Mi 
+          limits:
+            cpu: 200m
+            memory: 128Mi
 
 ---
 apiVersion: v1
@@ -536,7 +625,6 @@ spec:
     - protocol: TCP
       port: 80
       targetPort: 8080
-      nodeport: 30007
-  type: Nodeport
+  type: LoadBalancer
 
   
