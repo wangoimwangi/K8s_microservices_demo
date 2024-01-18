@@ -454,7 +454,7 @@ spec:
     spec:
       containers:
       - name: redis
-        image: redis:alpine:v0.2.3
+        image: redis:alpine
         ports:
         - containerPort: 6379
         volumeMounts:
@@ -627,4 +627,3 @@ spec:
       targetPort: 8080
   type: LoadBalancer
 
-  
